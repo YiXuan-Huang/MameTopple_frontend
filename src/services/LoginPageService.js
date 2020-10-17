@@ -3,7 +3,7 @@ import { CONFIG } from "../config";
 
 export class LoginPageService {
     //POST 範例
-    static async login(payload) {
+    static async login1(payload) {
         const  data  = await Request.post(CONFIG.API_URL + `/api/Token/Login`, payload);
         return data;
     }
