@@ -152,7 +152,7 @@ export default {
   },
 };
 </script>
-<style scoped >
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap");
 .title,
 .start {
@@ -160,11 +160,12 @@ export default {
   font-size: 120px;
   color: cornflowerblue;
 }
-body {
+.home {
   background-image: url("https://i.imgur.com/6Md6g05.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
+  height:100vh;
 }
 </style>
