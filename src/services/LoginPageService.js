@@ -1,19 +1,34 @@
 import axios from "axios";
-import { CONFIG } from "../config";
+import {
+    CONFIG
+} from "../config";
 
 export class LoginPageService {
     //POST 範例
     static async login1(payload) {
-        const  data  = await axios.post(CONFIG.API_URL + `/api/Token/Login`, payload);
+        const {data} = await axios.post(CONFIG.API_URL + `/api/Token/Login`, payload);
         return data;
     }
 
-    //註冊
+    //註冊POST
     static async register(payload) {
-        const  data  = await axios.post(CONFIG.API_URL + `/api/User`, payload);
+        const data = await axios.post(CONFIG.API_URL + `/api/User`, payload);
         return data;
     }
 
+    //取得會員名字
+    static async getUserName() {
+        
+        const token = sessionStorage.getItem('token');
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+        const data = await axios.get(
+            CONFIG.API_URL + "/api/Token/GetUserName", 
+            config
+        );
+        return data;
+    }
 
 
     // //GET 範例

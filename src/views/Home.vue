@@ -1,13 +1,22 @@
 <template>
   <div class="home">
     <div class="title">MAME TOPPLE</div>
+    <div class="userName">
+      Hello,{{userName}}
+    </div>
     <div class="content text-center">
       <button type="button" class="btn btn-primary start" v-show="toggle">
         START
       </button>
     </div>
     <div>
-      <b-modal ref="my-modal" hide-footer centered hide-header no-close-on-backdrop>
+      <b-modal
+        ref="my-modal"
+        hide-footer
+        centered
+        hide-header
+        no-close-on-backdrop
+      >
         <!-- no-close-on-backdrop -->
         <div class="d-block text-center">
           <!-- <b-card no-body>
@@ -52,7 +61,7 @@
               </b-row>
               <b-row class="text-center my-3">
                 <b-col>
-                  <b-button variant="info" @click="handleLoginButtonClick" 
+                  <b-button variant="info" @click="handleLoginButtonClick"
                     >登入</b-button
                   >
                 </b-col>
@@ -115,6 +124,7 @@ export default {
   name: "Home",
   data() {
     return {
+      userName:"",
       account: "string",
       password: "string",
       registeraccount: "",
@@ -129,23 +139,30 @@ export default {
   methods: {
     handleLoginButtonClick() {
       this.login();
-      
     },
     async login() {
       var payload = {
         account: this.account,
         password: this.password,
       };
-      
+
       try {
-        var loginRes = await LoginPageService.login1(payload);
+        var loginRes = await LoginPageService.login1(payload);//回傳token
         console.log("loginRes");
         console.log(loginRes);
-        this.toggle = !this.toggle;
+        sessionStorage['token']=loginRes//用session儲存token值
+
+        this.toggle = !this.toggle;//開始按鈕的顯示//如果登入成功開始按鈕就會顯示
         this.$refs["my-modal"].hide();
-      } catch {
+
+        var getUserNameRes = await LoginPageService.getUserName();
+        console.log("getUserNameRes");
+        console.log(getUserNameRes);
+        console.log(getUserNameRes.data);//.data是取帳號的值
+        this.userName=getUserNameRes.data
+      } catch(exception) {
         console.log("你這個大白癡");
-        
+        console.log(exception);
       }
     },
     async btnregister() {
@@ -180,6 +197,9 @@ export default {
   font-family: "Comic Neue", cursive;
   font-size: 120px;
   color: cornflowerblue;
+}
+.userName{
+  font-size: 40px;
 }
 .start {
   /* border-radius: 20px; */
