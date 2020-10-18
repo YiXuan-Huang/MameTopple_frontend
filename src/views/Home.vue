@@ -1,16 +1,101 @@
 <template>
   <div class="home">
-    帳號：<input type="text" v-model="account" /> 密碼：<input
-      type="text"
-      v-model="password"
-    />
-    <button @click="login">登入</button>
+    <div class="title">MAME TOPPLE</div>
+    <div>
+      <b-modal ref="my-modal" hide-footer centered hide-header>
+        <div class="d-block text-center">
+          <!-- <b-card no-body>
+          <b-tabs content-class="mt-3" align="center" pills card >
+            <b-tab title="First" active><p>I'm the first tab</p></b-tab>
+            <b-tab title="Second"><p>I'm the second tab</p></b-tab>
+          </b-tabs>
+           </b-card> -->
+          <b-tabs
+            active-nav-item-class="font-weight-bold text-uppercase text-danger"
+            active-tab-class="font-weight-bold text-success"
+            content-class="mt-3"
+          >
+            <b-tab title="登入" active>
+              <!-- <label for=""> 帳號：</label> -->
+              <b-row class="my-3 mx-3">
+                <b-form-input
+                  v-model="account"
+                  placeholder="Enter your email"
+                ></b-form-input
+              ></b-row>
+              <!-- <input type="text" v-model="account" />  -->
+              <!-- <label for=""> 密碼：</label> -->
+              <b-row class="my-3 mx-3">
+                <b-form-input
+                  v-model="password"
+                  type="password"
+                  placeholder="Enter your password"
+                ></b-form-input>
+                <!-- 這邊是要復原的 -->
+                <!-- <b-form-checkbox
+                  id="checkbox-1"
+                  v-model="status"
+                  name="checkbox-1"
+                  value="accepted"
+                  unchecked-value="not_accepted"
+                  class="text-center"
+                >
+                  Remember Me
+                </b-form-checkbox> -->
+                <!-- 這邊是要復原的 -->
+                </b-row
+              >
+              <b-row class="text-center my-3">
+                <b-col>
+                  <b-button variant="info">登入</b-button>
+                </b-col>
+              </b-row>
+              <!-- 密碼：<input type="text" v-model="password"/> -->
+            </b-tab>
+            <b-tab title="註冊">
+              <!-- 這邊是要復原的 -->
+              <!-- <b-row class="my-3 mx-3">
+                <b-form-input
+                  v-model="registeraccount"
+                  placeholder="Enter your email"
+                ></b-form-input
+              ></b-row>
+              <b-row class="my-3 mx-3">
+                <b-form-input
+                  v-model="registerpassword"
+                  placeholder="Enter your password"
+                ></b-form-input
+              ></b-row>
+              <b-row class="my-3 mx-3">
+                <b-form-input
+                  v-model="registernickname"
+                  placeholder="Enter your nickname"
+                ></b-form-input
+              ></b-row>
+              <b-row class="text-center my-3">
+                <b-col>
+                  <b-button variant="info">註冊</b-button>
+                </b-col>
+              </b-row> -->
+                <!-- 這邊是要復原的 -->
+            </b-tab>
+          </b-tabs>
+          <!-- <h3>Hello From My Modal!</h3> -->
+        </div>
+
+        <!-- <b-button class="mt-3" variant="outline-danger" block @click="hideModal"
+          >Close Me</b-button
+        > -->
+      </b-modal>
+    </div>
+
+    <!-- <button @click="login">登入</button>
     <div>
       <b-button>Button</b-button>
       <b-button variant="danger">Button</b-button>
       <b-button variant="success">Button</b-button>
       <b-button variant="outline-primary">Button</b-button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -40,6 +125,31 @@ export default {
       console.log("loginRes");
       console.log(loginRes);
     },
+    showModal() {
+      this.$refs["my-modal"].show();
+    },
+    hideModal() {
+      this.$refs["my-modal"].hide();
+    },
+  },
+  mounted() {
+    this.showModal();
   },
 };
 </script>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap");
+.title,
+.start {
+  font-family: "Comic Neue", cursive;
+  font-size: 120px;
+  color: cornflowerblue;
+}
+ body {
+            background-image: url('https://i.imgur.com/6Md6g05.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+        }
+</style>
