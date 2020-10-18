@@ -1,16 +1,16 @@
-import Request from "../utils/Request";
+import axios from "axios";
 import { CONFIG } from "../config";
 
 export class LoginPageService {
     //POST 範例
     static async login1(payload) {
-        const  data  = await Request.post(CONFIG.API_URL + `/api/Token/Login`, payload);
+        const  data  = await axios.post(CONFIG.API_URL + `/api/Token/Login`, payload);
         return data;
     }
 
     //註冊
     static async register(payload) {
-        const  data  = await Request.post(CONFIG.API_URL + `/api/User`, payload);
+        const  data  = await axios.post(CONFIG.API_URL + `/api/User`, payload);
         return data;
     }
 

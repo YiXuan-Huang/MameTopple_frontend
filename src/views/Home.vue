@@ -1,8 +1,14 @@
 <template>
   <div class="home">
     <div class="title">MAME TOPPLE</div>
+    <div class="content text-center">
+      <button type="button" class="btn btn-primary start" v-show="toggle">
+        START
+      </button>
+    </div>
     <div>
       <b-modal ref="my-modal" hide-footer centered hide-header no-close-on-backdrop>
+        <!-- no-close-on-backdrop -->
         <div class="d-block text-center">
           <!-- <b-card no-body>
           <b-tabs content-class="mt-3" align="center" pills card >
@@ -46,7 +52,9 @@
               </b-row>
               <b-row class="text-center my-3">
                 <b-col>
-                  <b-button variant="info" @click="login">登入</b-button>
+                  <b-button variant="info" @click="handleLoginButtonClick" 
+                    >登入</b-button
+                  >
                 </b-col>
               </b-row>
               <!-- 密碼：<input type="text" v-model="password"/> -->
@@ -112,20 +120,33 @@ export default {
       registeraccount: "",
       registerpassword: "",
       registernickname: "",
+      toggle: false,
     };
   },
   components: {
     // HelloWorld
   },
   methods: {
+    handleLoginButtonClick() {
+      this.login();
+      
+    },
     async login() {
       var payload = {
         account: this.account,
         password: this.password,
       };
-      var loginRes = await LoginPageService.login1(payload);
-      console.log("loginRes");
-      console.log(loginRes);
+      
+      try {
+        var loginRes = await LoginPageService.login1(payload);
+        console.log("loginRes");
+        console.log(loginRes);
+        this.toggle = !this.toggle;
+        this.$refs["my-modal"].hide();
+      } catch {
+        console.log("你這個大白癡");
+        
+      }
     },
     async btnregister() {
       var payload = {
@@ -143,9 +164,9 @@ export default {
     showModal() {
       this.$refs["my-modal"].show();
     },
-    hideModal() {
-      this.$refs["my-modal"].hide();
-    },
+    // hideModal() {
+    //   this.$refs["my-modal"].hide();
+    // },
   },
   mounted() {
     this.showModal();
@@ -160,12 +181,36 @@ export default {
   font-size: 120px;
   color: cornflowerblue;
 }
+.start {
+  /* border-radius: 20px; */
+  margin-top: 200px;
+  padding: 15px 25px;
+  font-size: 48px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: dodgerblue;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.start:hover {
+  background-color: royalblue;
+}
+
+/* .start:active {
+  background-color: royalblue;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+} */
 .home {
   background-image: url("https://i.imgur.com/6Md6g05.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
   background-size: cover;
-  height:100vh;
+  height: 100vh;
 }
 </style>
