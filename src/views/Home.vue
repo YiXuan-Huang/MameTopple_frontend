@@ -2,7 +2,7 @@
   <div class="home">
     <div class="title">MAME TOPPLE</div>
     <div>
-      <b-modal ref="my-modal" hide-footer centered hide-header>
+      <b-modal ref="my-modal" hide-footer centered hide-header no-close-on-backdrop>
         <div class="d-block text-center">
           <!-- <b-card no-body>
           <b-tabs content-class="mt-3" align="center" pills card >
@@ -43,18 +43,17 @@
                   Remember Me
                 </b-form-checkbox> -->
                 <!-- 這邊是要復原的 -->
-                </b-row
-              >
+              </b-row>
               <b-row class="text-center my-3">
                 <b-col>
-                  <b-button variant="info">登入</b-button>
+                  <b-button variant="info" @click="login">登入</b-button>
                 </b-col>
               </b-row>
               <!-- 密碼：<input type="text" v-model="password"/> -->
             </b-tab>
             <b-tab title="註冊">
               <!-- 這邊是要復原的 -->
-              <!-- <b-row class="my-3 mx-3">
+              <b-row class="my-3 mx-3">
                 <b-form-input
                   v-model="registeraccount"
                   placeholder="Enter your email"
@@ -74,10 +73,10 @@
               ></b-row>
               <b-row class="text-center my-3">
                 <b-col>
-                  <b-button variant="info">註冊</b-button>
+                  <b-button variant="info" @click="btnregister">註冊</b-button>
                 </b-col>
-              </b-row> -->
-                <!-- 這邊是要復原的 -->
+              </b-row>
+              <!-- 這邊是要復原的 -->
             </b-tab>
           </b-tabs>
           <!-- <h3>Hello From My Modal!</h3> -->
@@ -110,6 +109,9 @@ export default {
     return {
       account: "string",
       password: "string",
+      registeraccount: "",
+      registerpassword: "",
+      registernickname: "",
     };
   },
   components: {
@@ -125,6 +127,19 @@ export default {
       console.log("loginRes");
       console.log(loginRes);
     },
+    async btnregister() {
+      var payload = {
+        account: this.registeraccount,
+        password: this.registerpassword,
+        nickname: this.registernickname,
+        avatar: "avatar123",
+        win: 0,
+        lose: 0,
+      };
+      var registerRes = await LoginPageService.register(payload);
+      console.log("registerRes");
+      console.log(registerRes);
+    },
     showModal() {
       this.$refs["my-modal"].show();
     },
@@ -137,7 +152,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped >
 @import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap");
 .title,
 .start {
@@ -145,11 +160,11 @@ export default {
   font-size: 120px;
   color: cornflowerblue;
 }
- body {
-            background-image: url('https://i.imgur.com/6Md6g05.jpg');
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-        }
+body {
+  background-image: url("https://i.imgur.com/6Md6g05.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+}
 </style>

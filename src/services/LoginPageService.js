@@ -8,6 +8,14 @@ export class LoginPageService {
         return data;
     }
 
+    //註冊
+    static async register(payload) {
+        const  data  = await Request.post(CONFIG.API_URL + `/api/User`, payload);
+        return data;
+    }
+
+
+
     // //GET 範例
     // static async getAccountInfo() {
     //
