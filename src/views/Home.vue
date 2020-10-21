@@ -156,6 +156,7 @@ export default {
         console.log("loginRes");
         console.log(loginRes);
         sessionStorage["token"] = loginRes; //用session儲存token值
+        sessionStorage["account"]= this.account
 
         this.toggle = !this.toggle; //開始按鈕的顯示//如果登入成功開始按鈕就會顯示
         this.$refs["my-modal"].hide();
@@ -186,62 +187,38 @@ export default {
     showModal() {
       this.$refs["my-modal"].show();
     },
-    // getUserAllInfo: async function () {
-    //   var getUserAllInfo = await LoginPageService.getUserAllInfo();
-    //   console.log("getUserAllInfo");
-    //   console.log(getUserAllInfo);
-    //   console.log(getUserAllInfo.data.account);
-    //   this.items[0].name=getUserAllInfo.data.nickName
-    // },
 
     //進入等待頁按鈕
     start() {
       this.$router.push("Waiting");
       // console.dir(signalR);
-      var connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:5001/mamehub", {
-          skipNegotiation: true,
-          transport: signalR.HttpTransportType.WebSockets,
-        })
-        .build();
-      connection.serverTimeoutInMilliseconds = 12000;
+      // var connection = new signalR.HubConnectionBuilder()
+      //   .withUrl("https://localhost:5001/mamehub", {
+      //     skipNegotiation: true,
+      //     transport: signalR.HttpTransportType.WebSockets,
+      //   })
+      //   .build();
+      // connection.serverTimeoutInMilliseconds = 12000;
 
-      connection
-        .start()
-        .then(() => {
-          console.log("連線成功");
-         
-          // console.log(this.userName)
-          var joinName = this.userName;
-          console.log("joinName")
-          console.log(joinName)
-          connection.invoke('PlayerJoin',joinName);
-          connection.on('GameStart', function(gameStartObj){
-            console.log("哈囉")
-              console.log(JSON.stringify(gameStartObj))
-              console.log("測試測試")
-              console.log(JSON.stringify(gameStartObj[0]))
-          })
-    
-          // var joinHubProxy = connection.MameHub;
-          // console.log(joinHubProxy)
-          // console.log("joinHubProxy")
+      // connection
+      //   .start()
+      //   .then(() => {
+      //     console.log("連線成功");
 
-          // connection.invoke('PlayerJoin');
-          // getUserAllInfo();
-          // connection.on('PlayerJoin', function(Join) {
-          //   console.log(`${JSON.stringify(dollsTower)}`);
-          //   _dollsTower = dollsTower;
-          //   Binding();
-          //    });
+      //     var joinName = this.userName;
+      //     console.log("joinName");
+      //     console.log(joinName);
+      //     connection.invoke("PlayerJoin", joinName);
+      //     connection.on("SomeOneJoin", function (gameStartObj) {
+      //       console.log("哈囉");
+      //       console.log(JSON.stringify(gameStartObj));
+          
+      //     });
 
-          // var getUserAllInfo = await LoginPageService.getUserAllInfo();
-          //  console.log("getUserAllInfo");
-          // console.log(getUserAllInfo);
-        })
-        .catch(function (err) {
-          console.error(err.toString());
-        });
+      //   })
+      //   .catch(function (err) {
+      //     console.error(err.toString());
+      //   });
     },
   },
   mounted() {

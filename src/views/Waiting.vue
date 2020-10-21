@@ -2,17 +2,17 @@
   <div class="home">
     <div class="title">Waiting for players....</div>
     <div class="d-flex">
-      <div class="col-3 player" v-for="(item, index) in items" :key="index">
+      <div class="col-3 player" v-for="(player, index) in players" :key="index">
         <div class="one d-flex align-items-center flex-column">
           <div class="Avatar text-center">
             <img
-              v-bind:src="item.imageSrc"
+              v-bind:src="player.avatar"
               alt=""
               class="w-50 bg-white rounded-circle"
             />
           </div>
           <div class="info justify-content-start">
-            <span>name：{{ item.name }}</span>
+            <span>name：{{ player.nickname }}</span>
             <!-- <span>{{ Object.keys(item)[1] }}：{{item.name}}</span> -->
           </div>
         </div>
@@ -24,39 +24,70 @@
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
-import { LoginPageService } from "../services/LoginPageService";
+// import { LoginPageService } from "../services/LoginPageService";
+const signalR = require("@microsoft/signalr");
 
 export default {
   name: "Waiting",
   data() {
     return {
-      items: [
-        {
-          imageSrc: "https://i.imgur.com/OehAKIV.png",
-          name: "Annyyyy",
-        },
-        {
-          imageSrc: "https://i.imgur.com/7bFpMtt.png",
-          name: "Annyyyy213123",
-        },
-      ],
+      players:[]
     };
   },
   components: {
     // HelloWorld
   },
   methods: {
-    getUserAllInfo:async function() {
-      var getUserAllInfo = await LoginPageService.getUserAllInfo();
-      console.log("getUserAllInfo");
-      console.log(getUserAllInfo);
-      console.log(getUserAllInfo.data.nickName);
-      this.items[0].name=getUserAllInfo.data.nickName
+    // getUserAllInfo: async function () {
+    //   var getUserAllInfo = await LoginPageService.getUserAllInfo();
+    //   console.log("getUserAllInfo");
+    //   console.log(getUserAllInfo);
+    //   console.log(getUserAllInfo.data.nickName);
+    //   this.items[0].name = getUserAllInfo.data.nickName;
+    // },
+    getUserAccount: async function () {
+      var self = this;
+      var getUserAccount = sessionStorage.getItem("account")
+    
+
+      var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:5001/mamehub", {
+          skipNegotiation: true,
+          transport: signalR.HttpTransportType.WebSockets,
+        })
+        .build();
+      connection.serverTimeoutInMilliseconds = 120000;
+
+      connection
+        .start()
+        .then(() => {
+          console.log("連線成功");
+          // getUserAccount()
+          // console.log("joinName");
+          // console.log(joinName);
+          connection.invoke("PlayerJoin", getUserAccount);
+
+          connection.on("SomeOneJoin", function (players) {
+            console.log('SomeOneJoin');
+            console.log(players);
+            // console.log(JSON.stringify(gameStartObj));
+
+            self.players=players
+
+          });
+          
+        })
+        .catch(function (err) {
+          console.error(err.toString());
+        });
+
+      //test
     },
+    
   },
-  beforeMount(){
-    this.getUserAllInfo();
-  }
+  beforeMount() {
+    this.getUserAccount();
+  },
 };
 </script>
 <style scoped>
