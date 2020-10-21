@@ -5,6 +5,7 @@
       <router-link to="/about">About</router-link> -->
     <!-- </div> -->
     <router-view/>
+    <!-- <router-link to="/Waiting">Waiting</router-link> -->
   </div>
 </template>
 

@@ -1,11 +1,14 @@
 <template>
   <div class="home">
     <div class="title">MAME TOPPLE</div>
-    <div class="userName">
-      Hello,{{userName}}
-    </div>
+    <div class="userName">Hello,{{ userName }}</div>
     <div class="content text-center">
-      <button type="button" class="btn btn-primary start" v-show="toggle">
+      <button
+        type="button"
+        class="btn btn-primary start"
+        v-show="toggle"
+        @click="start"
+      >
         START
       </button>
     </div>
@@ -115,16 +118,18 @@
   </div>
 </template>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.7/signalr.min.js"></script>
 <script>
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 import { LoginPageService } from "../services/LoginPageService";
+const signalR = require("@microsoft/signalr");
 
 export default {
   name: "Home",
   data() {
     return {
-      userName:"",
+      userName: "",
       account: "string",
       password: "string",
       registeraccount: "",
@@ -147,20 +152,20 @@ export default {
       };
 
       try {
-        var loginRes = await LoginPageService.login1(payload);//回傳token
+        var loginRes = await LoginPageService.login1(payload); //回傳token
         console.log("loginRes");
         console.log(loginRes);
-        sessionStorage['token']=loginRes//用session儲存token值
+        sessionStorage["token"] = loginRes; //用session儲存token值
 
-        this.toggle = !this.toggle;//開始按鈕的顯示//如果登入成功開始按鈕就會顯示
+        this.toggle = !this.toggle; //開始按鈕的顯示//如果登入成功開始按鈕就會顯示
         this.$refs["my-modal"].hide();
 
         var getUserNameRes = await LoginPageService.getUserName();
         console.log("getUserNameRes");
         console.log(getUserNameRes);
-        console.log(getUserNameRes.data);//.data是取帳號的值
-        this.userName=getUserNameRes.data
-      } catch(exception) {
+        console.log(getUserNameRes.data); //.data是取帳號的值
+        this.userName = getUserNameRes.data;
+      } catch (exception) {
         console.log("你這個大白癡");
         console.log(exception);
       }
@@ -181,9 +186,63 @@ export default {
     showModal() {
       this.$refs["my-modal"].show();
     },
-    // hideModal() {
-    //   this.$refs["my-modal"].hide();
+    // getUserAllInfo: async function () {
+    //   var getUserAllInfo = await LoginPageService.getUserAllInfo();
+    //   console.log("getUserAllInfo");
+    //   console.log(getUserAllInfo);
+    //   console.log(getUserAllInfo.data.account);
+    //   this.items[0].name=getUserAllInfo.data.nickName
     // },
+
+    //進入等待頁按鈕
+    start() {
+      this.$router.push("Waiting");
+      // console.dir(signalR);
+      var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:5001/mamehub", {
+          skipNegotiation: true,
+          transport: signalR.HttpTransportType.WebSockets,
+        })
+        .build();
+      connection.serverTimeoutInMilliseconds = 12000;
+
+      connection
+        .start()
+        .then(() => {
+          console.log("連線成功");
+         
+          // console.log(this.userName)
+          var joinName = this.userName;
+          console.log("joinName")
+          console.log(joinName)
+          connection.invoke('PlayerJoin',joinName);
+          connection.on('GameStart', function(gameStartObj){
+            console.log("哈囉")
+              console.log(JSON.stringify(gameStartObj))
+              console.log("測試測試")
+              console.log(JSON.stringify(gameStartObj[0]))
+          })
+    
+          // var joinHubProxy = connection.MameHub;
+          // console.log(joinHubProxy)
+          // console.log("joinHubProxy")
+
+          // connection.invoke('PlayerJoin');
+          // getUserAllInfo();
+          // connection.on('PlayerJoin', function(Join) {
+          //   console.log(`${JSON.stringify(dollsTower)}`);
+          //   _dollsTower = dollsTower;
+          //   Binding();
+          //    });
+
+          // var getUserAllInfo = await LoginPageService.getUserAllInfo();
+          //  console.log("getUserAllInfo");
+          // console.log(getUserAllInfo);
+        })
+        .catch(function (err) {
+          console.error(err.toString());
+        });
+    },
   },
   mounted() {
     this.showModal();
@@ -198,7 +257,7 @@ export default {
   font-size: 120px;
   color: cornflowerblue;
 }
-.userName{
+.userName {
   font-size: 40px;
 }
 .start {
